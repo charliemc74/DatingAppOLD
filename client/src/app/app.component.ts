@@ -1,6 +1,9 @@
+import { LoginService } from './services/login.service';
 import { HttpClient } from '@angular/common/http';
 import { ImplicitReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { User } from './model/user';
+import { Login } from './model/login';
 
 @Component({
   selector: 'app-root',
@@ -12,20 +15,25 @@ export class AppComponent implements OnInit {
   title = 'DatingApp';
   users: any;
 
-  constructor(private http: HttpClient)
+  constructor(private http: HttpClient, private loginService: LoginService)
   {
   }
 
-  ngOnInit(): void {
-    this.getUsers();
+  ngOnInit(): void {   
+    this.setCurrentUser();
   }
 
-  getUsers(): void {
-    this.http.get('https://localhost:5001/api/Users').subscribe(response => {
-      this.users = response;
-      console.log(this.users);
-    }, error =>{
-      console.log(error);
-    });
+  setCurrentUser()
+  {
+    const user: User = JSON.parse(localStorage.getItem('loggedInUser'));
+    this.loginService.setCurrentUser(user);
   }
+  
+  registerComplete(event: Login)
+  {
+    console.log('AppCompnent Registration Complete: ' + event.username);
+    this.setCurrentUser();
+  }
+
+
 }

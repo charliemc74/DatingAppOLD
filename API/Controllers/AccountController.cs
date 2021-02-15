@@ -28,7 +28,6 @@ namespace API.Controllers
 
             
             [HttpPost("register")]
-            [AllowAnonymous]
             public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)            
             {
                 using var hmac = new HMACSHA512();
@@ -56,7 +55,6 @@ namespace API.Controllers
 
             
             [HttpPost("login")]
-            [AllowAnonymous]
             public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)            
             {
                 var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.UserName.ToLower());
