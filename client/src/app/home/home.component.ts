@@ -8,8 +8,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  @Output() registerCompletePassUp = new EventEmitter<Login>();
-  registerMode: boolean = false;
+ registerMode: boolean = false;
 
   constructor() { }
 
@@ -22,12 +21,6 @@ export class HomeComponent implements OnInit {
 
   cancelRegisterMode(event: boolean){
     this.registerMode = event;
-  }
-
-  registerComplete(event: Login)
-  {
-    console.log('Registration Complete: ' + event.username);
-    this.registerCompletePassUp.emit(event);
   }
 
 }

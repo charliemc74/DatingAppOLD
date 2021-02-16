@@ -4,6 +4,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -15,9 +17,9 @@ export class NavComponent implements OnInit {
   @Input() registeredUser: Login;
   loginModel = new Login('', '');
   
-  constructor(public loginService: LoginService ) { }
+  constructor(public loginService: LoginService, private router: Router, private toastr: ToastrService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.getCurrentUser();
   }
 
@@ -25,14 +27,22 @@ export class NavComponent implements OnInit {
   {
     this.loginService.loginUser(this.loginModel).subscribe(response => {
       console.log(response);
+      this.toastr.success('Login Successful!');
+      this.router.navigateByUrl('/members');
     },
       error => {
         console.log(error);
+        this.toastr.error(error.error);
+        this.router.navigateByUrl('/');
     });
   }
 
   logout() {
      this.loginService.logoutUser();
+     this.loginModel.username = '';
+     this.loginModel.password = '';
+     this.toastr.success('Logout successful');
+     this.router.navigateByUrl('/');
   }
 
   getCurrentUser(){
