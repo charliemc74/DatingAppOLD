@@ -8,37 +8,45 @@ using API.entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using API.Interfaces;
+using AutoMapper;
+using API.DTOs;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class UsersController : BaseApiController
     {
         private readonly ILogger<UsersController> _logger;
-        private readonly DataContext _context;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UsersController(ILogger<UsersController> logger, DataContext context)
+        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository, IMapper mapper)
         {
+            _mapper = mapper;
+            _userRepository = userRepository;
             _logger = logger;
-            _context = context;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
+            var usersDto = await _userRepository.GetMembersAsync();            
+            return Ok(usersDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{username}")]
         [Authorize]
-        public async Task<ActionResult<AppUser>> GetUser(int id)
+        public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if(user != null)
-            {        
-                return Ok(user);
-            }else{
+            var userDto = await _userRepository.GetMemberByUsernameAsync(username);
+            if (userDto != null)            
+            {                
+                return Ok(userDto);
+            }
+            else
+            {
                 return NotFound();
             }
         }
