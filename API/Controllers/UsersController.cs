@@ -28,7 +28,7 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("users")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
         {
