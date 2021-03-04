@@ -22,11 +22,11 @@ export class MembersService {
   }
 
   getMembers(): Observable<Member[]> {
-    return this.httpClient.get<Member[]>(this.apiUrl + 'users/users', httpOptions);
+    return this.httpClient.get<Member[]>(this.apiUrl + 'users/users');
   }
 
   getMember(username: string): Observable<Member> {
-    return this.httpClient.get<Member>(this.apiUrl + 'users/' + username, httpOptions);
+    return this.httpClient.get<Member>(this.apiUrl + 'users/' + username);
   }
 
 }
